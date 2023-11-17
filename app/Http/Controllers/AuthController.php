@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\StoreUserRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -21,6 +22,22 @@ class AuthController extends Controller
             'email' => $validated['email'],
             'password' => bcrypt($validated['password']),
         ]);
+
+        return $this->success([
+            'user' => $user,
+            'token' => $user->createToken('API Token of ' . $user->name)->plainTextToken
+        ]);
+    }
+
+    public function login(LoginUserRequest $request): JsonResponse
+    {
+        $validated = $request->validated();
+
+        if (!auth()->attempt($validated)) {
+            return $this->error('', 401, 'Credentials do not match');
+        }
+
+        $user = User::where('email', $validated['email'])->first();
 
         return $this->success([
             'user' => $user,
