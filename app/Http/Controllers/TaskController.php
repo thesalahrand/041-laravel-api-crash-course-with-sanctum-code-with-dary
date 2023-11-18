@@ -70,6 +70,12 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        if (Gate::denies('show-update-delete-task', $task)) {
+            return $this->error(null, 403, 'You\'re not authorized to delete this task');
+        }
+
+        $task->delete();
+
+        return $this->success(null, 204);
     }
 }
