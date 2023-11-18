@@ -2,13 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Traits\HttpResponses;
 use Illuminate\Foundation\Http\FormRequest;
 
-
-class StoreTaskRequest extends FormRequest
+class UpdateTaskRequest extends FormRequest
 {
-    use HttpResponses;
     /**
      * Determine if the user is authorized to make this request.
      */

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ShowTaskRequest;
 use App\Http\Requests\StoreTaskRequest;
+use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use App\Traits\HttpResponses;
@@ -46,19 +46,23 @@ class TaskController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Task $task)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Task $task)
+    public function update(UpdateTaskRequest $request, Task $task)
     {
-        //
+        if (Gate::denies('show-update-delete-task', $task)) {
+            return $this->error(null, 403, 'You\'re not authorized to update this task');
+        }
+
+        $validated = $request->validated();
+
+        $task->update([
+            'name' => $validated['name'],
+            'description' => $validated['description'],
+            'priority' => $validated['priority'],
+        ]);
+
+        return $this->success(new TaskResource($task));
     }
 
     /**
