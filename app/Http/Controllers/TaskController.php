@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ShowTaskRequest;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class TaskController extends Controller
 {
@@ -36,7 +38,11 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        //
+        if (Gate::denies('show-update-delete-task', $task)) {
+            return $this->error(null, 403, 'You\'re not authorized to show this task');
+        }
+
+        return $this->success(new TaskResource($task));
     }
 
     /**

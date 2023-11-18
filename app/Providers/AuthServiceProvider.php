@@ -23,7 +23,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::define('store-update-delete-task', function (User $user, Task $task) {
+        Gate::define('show-update-delete-task', function (User $user, Task $task) {
             return $user->id === $task->user_id;
         });
     }
