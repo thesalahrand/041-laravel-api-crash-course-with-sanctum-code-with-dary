@@ -20,6 +20,7 @@ use App\Http\Controllers\AuthController;
 //     return $request->user();
 // });
 Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
     Route::resource('tasks', TaskController::class);
 });
 
